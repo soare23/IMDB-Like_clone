@@ -11,7 +11,7 @@ from data_manager import execute_select, execute_dml_statement
 headers = {
     'Content-Type': 'application/json',
     'trakt-api-version': '2',
-    'trakt-api-key': os.environ.get('TRAKT_API_KEY')
+    'trakt-api-key': os.environ.get('TRAKT_API_KEY', '13e42ab9e863286086b37f5b6f3fa21ba5e2248460f6cedc47842096991cf718')
 }
 TRAKT_API_URL = 'https://api.trakt.tv'
 TRAKT_MAX_LIMIT = 20
@@ -22,8 +22,8 @@ def main():
     print("The program can try connecting to the TRAKT API to download data or use local data to insert instead (faster)?")
     answer = input("Do you want to connect to the TRAKT API? (y/n) ")
 
-    init_db.init_db()
-    init_db.create_schema()
+    # init_db.init_db()
+    # init_db.create_schema()
     if answer.lower() == "y":
         insert_genres()
         insert_shows(limit=20, max_show_count=100)
@@ -33,7 +33,8 @@ def main():
         print("Genres inserted")
         execute_sql_file("data/dump_1000_shows/codecool_public_shows.sql")
         print("Shows inserted")
-        execute_sql_file("data/dump_1000_shows/codecool_public_show_genres.sql")
+        execute_sql_file(
+            "data/dump_1000_shows/codecool_public_show_genres.sql")
         print("Show genres inserted")
         execute_sql_file("data/dump_1000_shows/codecool_public_seasons.sql")
         print("Seasons inserted")
@@ -41,13 +42,14 @@ def main():
         print("Episodes inserted")
         execute_sql_file("data/dump_1000_shows/codecool_public_actors.sql")
         print("Actors inserted")
-        execute_sql_file("data/dump_1000_shows/codecool_public_show_characters.sql")
+        execute_sql_file(
+            "data/dump_1000_shows/codecool_public_show_characters.sql")
         print("Show characters inserted")
 
 
-def execute_sql_file(filename):
-    with open(filename) as file:
-        execute_dml_statement(file.read())
+# def execute_sql_file(filename):
+#     with open(filename) as file:
+#         execute_dml_statement(file.read())
 
 
 def insert_genres():
@@ -103,14 +105,16 @@ def insert_shows(limit=20, max_show_count=1000):
                     insert_genres_of_show(genre_ids, show)
 
             except DataError:
-                print('Error while inserting ' + show['title'] + '. Skipping this show...')
+                print('Error while inserting ' +
+                      show['title'] + '. Skipping this show...')
             # except IntegrityError:
             #    print('Show (' + show['title'] + ') already exists...')
 
             insert_seasons_of_show(show['id'])
             insert_cast_of_show(show['id'])
 
-            progress_bar(total_counter + 1, max_show_count, prefix='Inserting shows:', suffix=show['title'])
+            progress_bar(total_counter + 1, max_show_count,
+                         prefix='Inserting shows:', suffix=show['title'])
             total_counter += 1
 
     clear_progress_bar('Inserted ' + str(len(inserted_ids)) + ' shows')
@@ -157,7 +161,8 @@ def insert_genres_of_show(genre_ids, show_entity):
 
 def insert_actor_of_show(show_id, actor):
     actor_id = actor['person']['ids']['trakt']
-    existing_actor = execute_select("SELECT id FROM actors WHERE id=%(actor_id)s", {'actor_id': actor_id})
+    existing_actor = execute_select(
+        "SELECT id FROM actors WHERE id=%(actor_id)s", {'actor_id': actor_id})
 
     if len(existing_actor) == 0:
         execute_dml_statement("""
@@ -248,7 +253,8 @@ def get_episode_entity(season_id, episode):
 
 def get_genre_ids(genre_list):
     genres = tuple((g.title() for g in genre_list))
-    id_result = execute_select("SELECT id FROM genres WHERE name IN %s;", (genres,))
+    id_result = execute_select(
+        "SELECT id FROM genres WHERE name IN %s;", (genres,))
     genre_ids = [result['id'] for result in id_result]
     return genre_ids
 
@@ -260,11 +266,13 @@ def progress_bar(count, total, prefix='', suffix=''):
     terminal_width = get_terminal_width()
     prefix = trim_string(prefix, max_prefix_length)
     suffix = trim_string(suffix, max_suffix_length, False)
-    bar_length = terminal_width - 18 - max_prefix_length - max_suffix_length - (len(str(total)) * 2)
+    bar_length = terminal_width - 18 - max_prefix_length - \
+        max_suffix_length - (len(str(total)) * 2)
     filled_len = int(round(bar_length * count / float(total)))
 
     # changes shape in every 0.33 sec
-    spinner = ['⋮', '⋯', '⋰', '⋱'][int(float(datetime.datetime.utcnow().strftime("%s.%f")) * 3) % 4]
+    spinner = ['⋮', '⋯', '⋰', '⋱'][int(
+        float(datetime.datetime.utcnow().strftime("%s.%f")) * 3) % 4]
 
     sys.stdout.write(
         ' {prefix} ▐{bar}▌ {percents: >5}% ({count: >{counter_length}}/{total}) {spinner} {suffix}\r'.format(
