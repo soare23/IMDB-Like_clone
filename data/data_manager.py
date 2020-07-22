@@ -2,6 +2,9 @@ import os
 import psycopg2
 import psycopg2.extras
 
+SHOWS_HEADERS = ['Title', 'Year',
+                 'Runtime(min)', 'Rating', 'Genres', 'Trailer', 'Homepage']
+
 
 def establish_connection(connection_data=None):
     """

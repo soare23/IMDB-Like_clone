@@ -8,7 +8,7 @@
       content="initial-scale=1, maximum-scale=1, user-scalable=no"
     />
 
-    <title>CsED</title>
+    <title>CsED - Most Rated Shows</title>
 
     <!-- Import Montserrat font -->
     <link
@@ -73,6 +73,10 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='style/detailed-view.css') }}"
     />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/pagination.css') }}"
+    />
   </head>
 
   <body>
@@ -92,7 +96,7 @@
         </div>
       </header>
       <section>
-        <h1 class="title text-center">Welcome page</h1>
+        <h1 class="title text-center">Shows</h1>
         <div class="card">
           <h2>Welcome TV show lovers!</h2>
           <p>
@@ -101,25 +105,76 @@
           </p>
           <p></p>
           <p>Okay, actually this is a designed dumb page without any logic.</p>
-          <p>Check the most popular shows</p>
-          <div class="most-rated-btn">
-            <button>
-              <a href="{{url_for('most_rated', page=0)}}">Most Popular shows</a>
-            </button>
-          </div>
+          <p>
+            You can find a navigational element, the so called "breadcrumb"
+            above the page's title. Use it for in-depth navigation.
+          </p>
         </div>
         <div class="card">
-          <ul>
-            {% for show in shows %}
-            <li>
-              <a href="{{ '/show/' + (show['id'] | string) }}"
-                >{{ show['title'] }}</a
-              >
-            </li>
+          <div class="dropdown-selector">
+            <form action="/shows/most-rated/{{current_page}}">
+              <select name="order_by">
+                <option value="title">Title</option>
+                <option value="year">Year</option>
+                <option value="runtime">Runtime</option>
+                <option value="rating">Rating</option>
+              </select>
+              <select name="order">
+                <option value="ASC">ASC</option>
+                <option value="DESC">DESC</option>
+              </select>
+              <button type="submit">Order</button>
+            </form>
+          </div>
+          <table>
+            <tr>
+              {% for header in headers %}
+              <th>{{header}}</th>
+              {% endfor %}
+            </tr>
+
+            {% for show in shows%}
+            <tr>
+              <td><a href="/show/{{show.id}}">{{ show.title }}</a></td>
+              <td>{{ show.year }}</td>
+              <td>{{ show.runtime }}</td>
+              <td>{{ show.rating }}</td>
+              <td>{{ show.genre }}</td>
+              {% if show.trailer %}
+              <td><a href="{{show.trailer}}">{{ show.trailer }}</a></td>
+              {% else %}
+              <td>No URL</td>
+              {% endif %} {% if show.homepage %}
+              <td><a href="{{show.homepage}}">{{ show.homepage }}</a></td>
+              {% else %}
+              <td>No URL</td>
+              {% endif %}
+            </tr>
             {% endfor %}
-          </ul>
+          </table>
         </div>
       </section>
+      <div class="card">
+        <div class="pagination">
+          {% if current_page == 0 %}
+          <p hidden></p>
+          {% else %}
+          <a href="{{current_page - 1}}"><button><<</button></a>
+          {% endif %} {% for page_number in range(7) %} {% if current_page ==
+          page_number %}
+          <a href="{{page_number}}" class="active">{{page_number + 1}}</a>
+          {%else%}
+          <a href="{{page_number}}">{{page_number + 1}}</a>
+          {%endif%} {% endfor %} {% if current_page == 6 %}
+          <p hidden></p>
+          {% else %}
+          <a href="{{current_page + 1}}"><button>>></button></a>
+          {% endif %}
+          <a href="/">
+            <button>Go back</button>
+          </a>
+        </div>
+      </div>
       <footer>
         Copyright, bla-bla
       </footer>
@@ -128,6 +183,6 @@
       <div class="dark-blue-layer"></div>
       <div class="light-blue-layer"></div>
     </div>
-    <script src="static/js/script.js"></script>
+    <script src="/static/js/script.js"></script>
   </body>
 </html>
