@@ -29,18 +29,17 @@ def most_rated(page):
     headers = data_manager.SHOWS_HEADERS
     order_by = request.args.get('order_by')
     order = request.args.get('order')
-    # last_page_data = queries.get_max_page()
-    for element in range(7):
+    last_page_data = queries.get_max_page()
+    last_page = math.ceil(last_page_data[0]['last_page']/15)
+    for element in range(0, last_page):
         if page == element:
+            counter = element * 15
             if order_by:
-                counter = element * 15
                 shows = queries.get_most_rated_shows(order_by, order, counter)
-                current_page = page
-                return render_template('shows.html', headers=headers, shows=shows, current_page=current_page)
             else:
                 shows = queries.get_most_rated_shows(2, "ASC", counter)
-                current_page = page
-                return render_template('shows.html', headers=headers, shows=shows, current_page=current_page)
+            current_page = page
+            return render_template('shows.html', headers=headers, shows=shows, current_page=current_page)
 
 
 @app.route('/show/<id>', methods=["GET", "POST"])

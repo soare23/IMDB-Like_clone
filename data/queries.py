@@ -19,7 +19,7 @@ def get_most_rated_shows(element, direction, number):
 
 def get_max_page():
     return data_manager.execute_select(
-        f'''SELECT ROUND(COUNT(id)/15) AS last_page
+        f'''SELECT COUNT(id) AS last_page
         FROM SHOWS'''
     )
 
@@ -69,6 +69,7 @@ def get_seasons_data_by_id(show_id):
         ORDER BY 2
         '''
     )
+
 
 # def get_runtime_by_id(show_id):
 #     return data_manager.execute_select(
