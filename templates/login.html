@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Import Montserrat font -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+    <!-- Normalize.css fixes lot of differences between browsers default styles -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css"
+    />
+
+    <!-- project wide styling -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/site.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/header.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/footer.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/background.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/button.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/card.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/table.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/form.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/grid.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/utils.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/custom.css') }}"
+    />
+
+    <title>Log in</title>
+  </head>
+  <body>
+    <div class="title">
+      <h3>Log in</h3>
+    </div>
+    {% with messages = get_flashed_messages() %} {% if messages %} {% for
+    message in messages %} {% if session['status'] == 1 %}
+    <div class="error">
+      <p>{{ message }}</p>
+      <!-- style="margin-top: 10px; margin-bottom: 25px; -->
+    </div>
+    {% else %}
+    <div class="success">
+      <p>{{ message }}</p>
+      <!-- style="margin-top: 10px; margin-bottom: 25px; -->
+    </div>
+    {% endif %} {% endfor %} {% endif %} {% endwith %}
+    <div class="container">
+      <form action="/login" method="POST" id="form" class="registration-form">
+        <div>
+          <label for="username">Enter your username</label>
+          <input type="text" name="username" id="user" />
+        </div>
+        <div>
+          <label for="password">Enter your password</label>
+          <input type="password" name="password" id="password" />
+        </div>
+        <input type="submit" />
+      </form>
+    </div>
+    <a href="/" class="back-button"><button>Go back</button></a>
+  </body>
+</html>

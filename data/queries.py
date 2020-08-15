@@ -35,7 +35,7 @@ def get_show_details(show_id):
 
 def get_show_genre_by_id(show_id):
     return data_manager.execute_select(
-        f'''SELECT DISTINCT shows.id, string_agg(genres.name::character varying, ', ') AS genre FROM shows 
+        f'''SELECT DISTINCT shows.id, string_agg(genres.name::character varying, ', ') AS genre FROM shows
         INNER JOIN show_genres ON shows.id = show_genres.show_id
         INNER JOIN genres ON genres.id = show_genres.genre_id
         WHERE shows.id = {show_id}
@@ -67,6 +67,33 @@ def get_seasons_data_by_id(show_id):
         WHERE shows.id = {show_id}
         GROUP BY 1, 2, 3
         ORDER BY 2
+        '''
+    )
+
+
+def add_new_user(username, password):
+    return data_manager.execute_dml_statement(
+        f'''INSERT INTO users (username, password)
+        VALUES ('{username}', '{password}')
+        '''
+    )
+
+
+def get_user_details_by_username(username):
+    return data_manager.execute_select(
+        f'''SELECT username, password
+        FROM users
+        WHERE username = '{username}'
+        '''
+
+    )
+
+
+def check_if_user_exist(username):
+    return data_manager.execute_select(
+        f'''SELECT username, password
+        FROM users
+        WHERE username = '{username}'
         '''
     )
 

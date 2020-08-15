@@ -86,10 +86,23 @@
         <span id="header-title" class="title">
           Codecool Series DB
         </span>
+        {% if session['username'] %}
         <div id="header-auth">
-          <button type="button" id="bt_register">Register</button>
-          <button type="button" id="bt_login">Login</button>
+          <h3>Hello {{session['username']}}</h3>
+          <a href="/logout">
+            <button type="button" id="bt_login">Logout</button>
+          </a>
         </div>
+        {% else %}
+        <div id="header-auth">
+          <a href="/register"
+            ><button type="button" id="bt_register">Register</button>
+          </a>
+          <a href="/login">
+            <button type="button" id="bt_login">Login</button>
+          </a>
+        </div>
+        {% endif %}
       </header>
       <section>
         <h1 class="title text-center">Welcome page</h1>
@@ -128,6 +141,5 @@
       <div class="dark-blue-layer"></div>
       <div class="light-blue-layer"></div>
     </div>
-    <script src="static/js/script.js"></script>
   </body>
 </html>

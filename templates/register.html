@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Import Montserrat font -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+    <!-- Normalize.css fixes lot of differences between browsers default styles -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css"
+    />
+
+    <!-- project wide styling -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/site.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/header.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/footer.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/background.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/button.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/card.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/table.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/form.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/grid.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/utils.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style/custom.css') }}"
+    />
+
+    <title>Register with us</title>
+  </head>
+  <body>
+    <div class="title">
+      <h2>Register with us</h2>
+    </div>
+    {% with messages = get_flashed_messages() %} {% if messages %} {% for
+    message in messages %}
+    <div>
+      <p class="error">{{ message }}</p>
+      <!-- style="margin-top: 10px; margin-bottom: 25px; -->
+    </div>
+    {% endfor %} {% endif %} {% endwith %}
+    <!-- <div class="error" id="error">Passwords do not match</div> -->
+    <div class="container">
+      <form
+        action="/register"
+        method="POST"
+        id="form"
+        class="registration-form"
+      >
+        <div>
+          <label for="username">Enter a username</label>
+          <input type="text" name="username" id="user" required />
+        </div>
+        <div>
+          <label for="password">Enter your password</label>
+          <input type="password" name="password" id="password" required />
+        </div>
+        <div>
+          <label for="password2">Verify password</label>
+          <input type="password" name="password2" id="password2" required />
+        </div>
+        <input type="submit" />
+      </form>
+    </div>
+    <a href="/" class="back-button"><button>Go back</button></a>
+    <!-- <script type="text/javascript" src="static/js/script.js"></script> -->
+  </body>
+</html>

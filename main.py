@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, redirect, jsonify
+from flask import Flask, render_template, url_for, request, redirect, jsonify, flash, session, escape
 from data import queries
 import math
 from dotenv import load_dotenv
@@ -6,10 +6,11 @@ from data import data_manager
 import requests
 import json
 import datetime
-
+import util
 
 load_dotenv()
 app = Flask('codecool_series')
+app.config["SECRET_KEY"] = 'UF9y5KFUzcgGsYCG4ZsslQ'
 
 
 @app.route('/')
@@ -48,7 +49,62 @@ def show_details(id):
     seasons_data = queries.get_seasons_data_by_id(id)
     show_details = queries.get_show_details(id)
     show_genre = queries.get_show_genre_by_id(id)
+    print(show_actors)
     return render_template('show-details.html', show_details=show_details, genres=show_genre, actors=show_actors, seasons=seasons_data)
+
+
+@app.route('/register', methods=["GET", "POST"])
+def register():
+    session['status'] = 0
+    if request.method == "POST":
+        # result = request.get_json()
+        # username = result['username']
+        # password = result['password']
+        username = request.form.get('username').lower()
+        password = request.form.get('password')
+        password2 = request.form.get('password2')
+        if queries.check_if_user_exist(username):
+            flash('Username already exists. Please choose a different username')
+            return redirect(url_for('register'))
+        elif password != password2:
+            flash('Passwords do not match')
+            return redirect(url_for('register'))
+        else:
+            hashed_password = util.hash_password(password)
+            queries.add_new_user(username, hashed_password)
+            flash('Registration succesful. Log in to continue.')
+            return redirect(url_for('login'))
+    return render_template('register.html')
+
+
+@app.route('/login', methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form.get('username').lower()
+        password = request.form.get('password')
+        user_data = queries.get_user_details_by_username(username)
+        print(user_data)
+        if user_data == []:
+            session['status'] = 1
+            flash("Username dose not exist.")
+            redirect(url_for('login'))
+        else:
+            saved_password = user_data[0]['password']
+            if util.verify_password(password, saved_password):
+                session["username"] = user_data[0]['username']
+                return redirect(url_for('index'))
+            else:
+                session['status'] = 1
+                flash("Wrong username or password")
+                return redirect(url_for('login'))
+    return render_template('login.html')
+
+
+@app.route('/logout', methods=["POST", "GET"])
+def logout():
+    session.pop('username', None)
+    session.pop('status', None)
+    return redirect(url_for('index'))
 
 
 def main():

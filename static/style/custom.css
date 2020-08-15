@@ -1,0 +1,61 @@
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.registration-form {
+  width: min-content;
+}
+
+.registration-form input,
+label {
+  margin-top: 2px;
+  margin-bottom: 10px;
+}
+
+.registration-form input[type='submit'] {
+  width: 100%;
+}
+
+.back-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.back-button button {
+  width: 185px;
+}
+
+.error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: red;
+  margin-bottom: 10px;
+}
+
+.success {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: green;
+  margin-bottom: 10px;
+}
